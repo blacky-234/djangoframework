@@ -1,0 +1,6 @@
+taskmanagement/*/__pycache__/
+taskmanagement/*/__pycache__/
+taskmanagement/*/migrations/
+
+**/__pycache__/
+**/migrations/

@@ -21,7 +21,12 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path('', include('usermanagement.urls')),
+    path('websocket/', include('websocket.urls')),
     path('admin/', admin.site.urls),
+    path('api-auth/', include('rest_framework.urls')),
+    path('employee/',include('Employee.urls')),
+    path('products/',include('products.urls')),
+
 ]
 
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

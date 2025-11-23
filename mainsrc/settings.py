@@ -37,7 +37,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
     'usermanagement',
+    'websocket',
+    'Employee',
+    'products'
 ]
 
 MIDDLEWARE = [
@@ -68,7 +72,7 @@ TEMPLATES = [
     },
 ]
 
-# WSGI_APPLICATION = 'mainsrc.wsgi.application'
+WSGI_APPLICATION = 'mainsrc.wsgi.application'
 
 
 # Database
@@ -82,6 +86,11 @@ DATABASES = {
         'PORT': "5432",
         'USER': "djangouser",
         'PASSWORD': "djangomypassword",
+
+        'TEST': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': 'test_db.sqlite3',
+        }
     }
 }
 
@@ -135,3 +144,14 @@ if not DEBUG:
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+REST_FRAMEWORK = {
+    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend']
+}
+
+CACHES = {
+    "default": {
+        "BACKEND": "django.core.cache.backends.memcached.PyMemcacheCache",
+        "LOCATION": "172.17.0.4:11211",
+    }
+}

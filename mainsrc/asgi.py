@@ -10,7 +10,7 @@ https://docs.djangoproject.com/en/5.2/howto/deployment/asgi/
 import os
 
 from django.core.asgi import get_asgi_application
-from websocket.router import websocket_router
+from customwebsocket.router import websocket_router
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'mainsrc.settings')
 

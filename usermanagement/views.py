@@ -6,7 +6,7 @@ from django.shortcuts import render
 class Auth:
 
 
-    def Login_Views(request):
+    def Root_Views(request):
         print("request captured")
 
-        return render(request, 'login.html')
+        return render(request, 'rootpage/index.html')

@@ -1,6 +1,8 @@
 from django.test import TestCase,Client
 from django.core.cache import cache
 from products.models import Category
+from django.contrib.staticfiles.testing import StaticLiveServerTestCase
+from selenium import webdriver
 
 
 class ListCategoryCacheTest(TestCase):
@@ -31,3 +33,17 @@ class ListCategoryCacheTest(TestCase):
             print("Success")
         else:
             self.fail("Failed")
+
+
+
+class ListCategoryMenuTest(StaticLiveServerTestCase):
+
+    def setUp(self):
+
+        self.selenium = webdriver.Chrome()
+        self.selenium.implicitly_wait(10)
+    
+
+    def tearDown(self):
+        self.selenium.quit()
+        return super().tearDown()

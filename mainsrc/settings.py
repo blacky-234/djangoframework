@@ -53,6 +53,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     # 'core.middleware.logging.SimpleMiddleware',
+    'core.docker.container.ContainerMiddleware',
 ]
 
 ROOT_URLCONF = 'mainsrc.urls'

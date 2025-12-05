@@ -156,3 +156,17 @@ CACHES = {
         "LOCATION": "172.17.0.4:11211",
     }
 }
+
+
+# Celery settings
+
+CELERY_BROKER_URL = "amqp://admin:admin123@172.17.0.5:5672/"
+CELERY_RESULT_BACKEND = "rpc://"
+CELERY_BROKER_CONNECTION_RETRY_ON_STARTUP = True
+CELERY_TASK_TRACK_STARTED = True
+accept_content = ['application/json']
+result_serializer = 'json'
+task_serializer = 'json'
+timezone = 'Asia/Kolkata'
+# result_backend = 'django-db' # TODO: pip install django-celery-results
+# CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'

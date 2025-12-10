@@ -4,21 +4,33 @@ from .tasks import generate_report
 from .models import ReportJob
 import uuid
 import asyncio
+from rest_framework.response import Response
+from rest_framework.decorators import api_view
+from rest_framework import status
+from django.template.loader import render_to_string
 
 # Create your views here.
 
 class SystemStatus:
     def system_status(request):
         if request.method == 'GET':
-            return render(request, 'systemstatus.html')
+            context = {}
+            context['report'] = ReportJob.objects.all()
+            return render(request, 'systemstatus.html',context)
 
 class ReportStatus:
+
     # Normal endpoint starts celery task
+    @api_view(['GET'])
     def start_report_job(request):
+        print("Starting report job")
+        context = {}
         job_id = str(uuid.uuid4())
-        ReportJob.objects.create(job_id=job_id, status="started")
+        report = ReportJob.objects.create(job_id=job_id, status="started")
+        context['job'] = ReportJob.objects.get(id=report.id)
         generate_report.delay(job_id)
-        return JsonResponse({"job_id": job_id, "message": "Report started"})
+        data = render_to_string('tablerow.html', context)
+        return Response(data,status.HTTP_200_OK)
 
     # Async endpoint for checking progress (non-blocking)
     async def check_report_progress(request, job_id):

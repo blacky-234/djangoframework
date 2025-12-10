@@ -151,22 +151,32 @@ REST_FRAMEWORK = {
 }
 
 CACHES = {
+    # 1️⃣ Default cache → Memcache (for DB caching, HTML fragments, etc.)
     "default": {
         "BACKEND": "django.core.cache.backends.memcached.PyMemcacheCache",
         "LOCATION": "172.17.0.4:11211",
+    },
+
+    # 2️⃣ Redis cache → for sessions, atomic counters, progress, etc.
+    "redis": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": "redis://default:admin123@172.17.0.6:6379/1",
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        }
     }
 }
+
 
 
 # Celery settings
 
 CELERY_BROKER_URL = "amqp://admin:admin123@172.17.0.5:5672/"
-CELERY_RESULT_BACKEND = "rpc://"
+CELERY_RESULT_BACKEND = "redis://default:admin123@172.17.0.6:6379/0"
 CELERY_BROKER_CONNECTION_RETRY_ON_STARTUP = True
 CELERY_TASK_TRACK_STARTED = True
 accept_content = ['application/json']
 result_serializer = 'json'
 task_serializer = 'json'
 timezone = 'Asia/Kolkata'
-# result_backend = 'django-db' # TODO: pip install django-celery-results
 # CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'

@@ -30,7 +30,8 @@ class ReportStatus:
         context['job'] = ReportJob.objects.get(id=report.id)
         generate_report.delay(job_id)
         data = render_to_string('tablerow.html', context)
-        return Response(data,status.HTTP_200_OK)
+        job_id = report.job_id
+        return Response({"job_id": job_id, "html": data},status.HTTP_200_OK)
 
     # Async endpoint for checking progress (non-blocking)
     async def check_report_progress(request, job_id):

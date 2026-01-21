@@ -16,6 +16,8 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'mainsrc.settings')
 
 django_asgi_app = get_asgi_application()
 
+"""
+
 # Custom ASGI application wrapper
 async def app(scope, receive, send):
     if scope['type'] == 'http':
@@ -48,3 +50,20 @@ async def websocket_app(scope, receive, send):
             break
 
 application = app
+
+"""
+
+from channels.routing import ProtocolTypeRouter, URLRouter
+from channels.auth import AuthMiddlewareStack
+import websocket.urls 
+
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'mainsrc.settings')
+
+application = ProtocolTypeRouter({
+    "http": get_asgi_application(),
+    "websocket": AuthMiddlewareStack(
+        URLRouter(
+            websocket.urls.testingwebsocket
+        )
+    ),
+})

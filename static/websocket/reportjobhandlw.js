@@ -36,10 +36,34 @@ $('#job-create-btn').on('click',function(){
         if (!response.ok) {
             throw new Error("Network response was not ok " + response.statusText);
         }
-        return response.text();
+        return response.json();
     }).then(data => {
-        $('#report-table-body').append(data);
+        $('#report-table-body').append(data.html);
+        connectProgressSocket(data.job_id);
     }).catch(error => {
         console.error("Error:", error);
     });
 }) 
+
+
+function connectProgressSocket(jobId) {
+
+    const ws = new WebSocket(
+        `ws://${window.location.host}/progr/${jobId}/`
+    );
+
+    ws.onmessage = function (e) {
+        const data = JSON.parse(e.data);
+
+        console.log("Progress:", data.progress);
+
+        // 3️⃣ Update UI live
+        $(`#progress-${jobId}`).text(data.progress + "%");
+
+        if (data.progress >= 100) {
+            ws.close();
+        }
+    };
+
+    ws.onclose = () => console.log("WebSocket closed for", jobId);
+}

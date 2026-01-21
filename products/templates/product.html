@@ -1,4 +1,4 @@
-{% extends "products/base.html" %}
+{% comment %} {% extends "products/base.html" %}
 {% block title %}Products{% endblock %}
 
 {% block content %}
@@ -43,4 +43,41 @@
   </div>
 </div>
 
-{% endblock %}
+{% endblock %} {% endcomment %}
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link rel="stylesheet" href="{% static 'bootstrapframework/css/bootstrap.min.css' %}">
+</head>
+<body>
+  <a href="{% url 'products:productform' %}"><button>product</button></a>
+  <h1>product Lists</h1>
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="col">S.No</th>
+        <th scope="col">Name</th>
+        <th scope="col">Price</th>
+        <th scope="col">Stock</th>
+        <th scope="col">Category</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for product in products %}
+        <tr>
+          <th scope="row">{{ forloop.counter }}</th>
+          <td>{{ product.name }}</td>
+          <td>{{ product.price }}</td>
+          <td>{{ product.stock }}</td>
+          <td>{{ product.category.name }}</td>
+        </tr>  
+      {% endfor %}  
+    </tbody>
+  </table>
+</body>
+</html>

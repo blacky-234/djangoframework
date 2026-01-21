@@ -7,6 +7,5 @@ class Auth:
 
 
     def Root_Views(request):
-        print("request captured")
 
         return render(request, 'rootpage/index.html')

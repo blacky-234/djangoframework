@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 from pathlib import Path
+from datetime import timedelta
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -37,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    "channels",
     'rest_framework',
     'usermanagement',
     'websocket',
@@ -74,6 +76,20 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'mainsrc.wsgi.application'
+ASGI_APPLICATION = 'mainsrc.asgi.application'
+
+
+# Channel
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": ["redis://:admin123@172.21.0.6:6379/3"],
+        },
+    },
+}
+
 
 
 # Database
@@ -83,7 +99,7 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': "djangomydb",
-        'HOST': "172.17.0.3",
+        'HOST': "172.21.0.3",
         'PORT': "5432",
         'USER': "djangouser",
         'PASSWORD': "djangomypassword",
@@ -135,7 +151,9 @@ STATIC_URL = '/static/'
 
 # For development, you may also want:
 if DEBUG:
-    STATICFILES_DIRS = [BASE_DIR / "static"]
+    STATICFILES_DIRS = [BASE_DIR / "static/"]
+    # STATIC_ROOT = BASE_DIR / "static"
+    # print("static root", STATIC_ROOT)
 
 # For production, set where static files are collected:
 if not DEBUG:
@@ -147,20 +165,28 @@ if not DEBUG:
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 REST_FRAMEWORK = {
-    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend']
+    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
+}
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=30),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
 }
 
 CACHES = {
     # 1️⃣ Default cache → Memcache (for DB caching, HTML fragments, etc.)
     "default": {
         "BACKEND": "django.core.cache.backends.memcached.PyMemcacheCache",
-        "LOCATION": "172.17.0.4:11211",
+        "LOCATION": "172.21.0.4:11211",
     },
 
     # 2️⃣ Redis cache → for sessions, atomic counters, progress, etc.
     "redis": {
         "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": "redis://default:admin123@172.17.0.6:6379/1",
+        "LOCATION": "redis://default:admin123@172.21.0.6:6379/1",
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
         }
@@ -171,8 +197,8 @@ CACHES = {
 
 # Celery settings
 
-CELERY_BROKER_URL = "amqp://admin:admin123@172.17.0.5:5672/"
-CELERY_RESULT_BACKEND = "redis://default:admin123@172.17.0.6:6379/0"
+CELERY_BROKER_URL = "amqp://admin:admin123@172.21.0.5:5672/"
+CELERY_RESULT_BACKEND = "redis://default:admin123@172.21.0.6:6379/0"
 CELERY_BROKER_CONNECTION_RETRY_ON_STARTUP = True
 CELERY_TASK_TRACK_STARTED = True
 accept_content = ['application/json']

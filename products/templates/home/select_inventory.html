@@ -10,8 +10,9 @@
 <body>
     <div class="container">
         <a href="{% url 'products:listcategory' %}"><button>category</button></a>
-        <button>order</button>
-        <button>product</button>
+        <a href="{% url 'products:listproducts' %}"><button>product</button></a>
+        <a href="{% url 'products:orderspage' %}"><button>order</button></a>
+       
     </div>
 </body>
 </html>

@@ -1,6 +1,8 @@
 from django.shortcuts import render,redirect
 from .models import Employee,Department,Project,Profile
 from django.db import transaction
+import asyncio
+from asgiref.sync import sync_to_async
 
 class EmployeeProject:
 
@@ -24,11 +26,18 @@ class ProjectManagement:
             context['projects'] = Project.objects.all()
             return render(request, 'project/projectlist.html',context)
     
-    def project_add_employee(request,id):
+    async def project_add_employee(request,id):
         context = {}
         if request.method == 'GET':
-            context['employees'] = Employee.objects.get(id=id)
-            context['projects'] = Project.objects.all()
+            employee_task = sync_to_async(Employee.objects.get)(id=id)
+            projects_task = sync_to_async(list)(Project.objects.all())
+
+            employee, projects = await asyncio.gather(
+                employee_task,
+                projects_task
+            )
+            context['employees'] = employee
+            context['projects'] = projects
             return render(request, 'project/projectaddemployee.html',context)
         elif request.method == 'POST':
             try:
